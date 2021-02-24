@@ -1,3 +1,5 @@
+GCVersion = "1.12.2-4.0.2.${project.GCBuild}"
+
 repositories {
 	ivy {
 		url "https://micdoodle8.com/new-builds/"
@@ -11,8 +13,8 @@ repositories {
 }
 
 dependencies {
-	compile "GC-1.12-dev:GalacticraftCore-Dev:${project.GCVersion}"
-	compile "GC-1.12-dev:Galacticraft-API:${project.GCVersion}"
-	compile "GC-1.12-dev:Galacticraft-Planets-Dev:${project.GCVersion}"
-	compile "GC-1.12-dev:MicdoodleCore-Dev:${project.GCVersion}"
+	compile "GC-1.12-dev:GalacticraftCore-Dev:${GCVersion}"
+	compile "GC-1.12-dev:Galacticraft-API:${GCVersion}"
+	compile "GC-1.12-dev:Galacticraft-Planets-Dev:${GCVersion}"
+	compile "GC-1.12-dev:MicdoodleCore-Dev:${GCVersion}"
 }
