@@ -8,6 +8,8 @@ Two options are available.
 
 
 ## Defined Version
+USE ONLY for builds 261 and below
+
 In your `build.gradle` script. Add the following block and define the version you want
 ```gradle
 project.ext {
@@ -16,7 +18,7 @@ project.ext {
 
 apply from: "https://raw.githubusercontent.com/ReadOnlyDevelopment/gradle/galacticraft/dev.gradle"
 ```
--> *`###` is the build number you want to use*
+-> *`###` is the build number you want to use* 
 
 **Note**
 If your going to just put the latest build number simply use the `dev-latest` script. That script will always define the latest version
