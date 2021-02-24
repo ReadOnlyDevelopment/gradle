@@ -27,3 +27,5 @@ In your `build.gradle` script. Add the following block and define the version yo
 ```gradle
 apply from: "https://raw.githubusercontent.com/ReadOnlyDevelopment/gradle/galacticraft/dev-latest.gradle"
 ```
+
+Special Thanks to [Marcus8448](https://github.com/marcus8448) for creating the ivy repository part of the script
