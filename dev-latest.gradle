@@ -1,5 +1,5 @@
 repositories {
-  maven { url 'https://maven.readonly.network/' }
+	maven { url 'https://maven.readonly.network/' }
 }
 
 dependencies {
