@@ -1,0 +1,171 @@
+def doSourceJar = project.hasProperty('doSourceJar') ? project.doSourceJar : false
+def doJavadocJar = project.hasProperty("doJavadocJar") ? project.doJavadocJar : false
+def doAPIJar = project.hasProperty("doAPIJar") ? project.doAPIJar : false
+def doDeobfJar = project.hasProperty("doDeobfJar") ? project.doDeobfJar : false
+
+def addForgeInfo = project.hasProperty("addForgeInfo") ? project.addForgeInfo : false
+def addMappings = project.hasProperty("addMappings") ? project.addMappings : false
+
+def javadocFail = project.hasProperty("failOnError") ? project.failOnError : true
+def specVersion = project.hasProperty("specVersion") ? project.specVersion : "1"
+def implVersion = project.hasProperty("implVersion") ? project.implVersion : "1"
+def vendorName = project.hasProperty("vendorName") ? project.vendorName : "No Vendor Defined"
+
+def mcVersion = project.hasProperty("mcVersion") ? project.mcVersion : "No MC Version Defined"
+def forgeVersion = project.hasProperty("forgeVersion") ? project.forgeVersion : "No Forge Version Defined"
+def mappingsVersion = project.hasProperty("mappingsVersion") ? project.mappingsVersion : "No Version Defined"
+def FMLAT = project.hasProperty("FMLAT") ? project.FMLAT : null
+
+javadoc {
+	failOnError = javadocFail
+}
+
+Map<String, String> map = new HashMap<String, String>()
+
+map.put("Timestamp", System.currentTimeMillis())
+map.put('Specification-Title', "${project.archivesBaseName}")
+map.put('Specification-Vendor', "${vendorName}")
+map.put('Specification-Version', specVersion)
+map.put('Implementation-Title', "${project.archivesBaseName}")
+map.put('Implementation-Vendor', "${vendorName}")
+map.put('Implementation-Version', implVersion)
+
+if(addForgeInfo) {
+	map.put('With-Forge', "${mcVersion}-${forgeVersion}")
+}
+if(addMappings) {
+	map.put('With-Mappings', "${mappingsVersion}")
+}
+
+jar {
+	manifest {
+		attributes map.each{entry -> entry.key.toString() +":"+ entry.value.toString()}
+		if(FMLAT) {
+			attributes 'FMLAT': FMLAT
+		}
+		
+	}
+}
+
+task apiJar(type: Jar) {
+	onlyIf {
+		doAPIJar == true
+	}
+	
+	from (sourceSets.main.output) {
+		includes.addAll(project.ext.apiFiles)
+	}
+	from(sourceSets.main.java) {
+		includes.addAll(project.ext.apiFiles)
+	}
+	classifier = 'api'
+	manifest {
+		attributes map.each{entry -> entry.key.toString() +":"+ entry.value.toString()}
+	}
+}
+
+task deobfJar(type: Jar, dependsOn: jar) {
+	onlyIf {
+		doDeobfJar == true
+	}
+	description = 'Creates a JAR containing the non-obfuscated compiled code.'
+	classifier = 'dev'
+	from (sourceSets.main.output) {
+		includes.addAll(project.ext.apiFiles)
+		includes.addAll(project.ext.coreFiles)
+	}
+	from(sourceSets.main.java) {
+		includes.addAll(project.ext.apiFiles)
+		includes.addAll(project.ext.coreFiles)
+	}
+	manifest {
+		attributes map.each{entry -> entry.key.toString() +":"+ entry.value.toString()}
+		if (project.hasProperty('mod_at_file')) {
+			attributes 'FMLAT': project.mod_at_file
+		}
+		if (project.hasProperty('core_plugin')) {
+			attributes 'FMLCorePlugin': project.core_plugin
+		}
+	}
+}
+
+task signJar(type: SignJar, dependsOn: reobfJar) {
+	onlyIf {
+		getBooleanProperty('do_sign_jar') &&
+				project.hasProperty('keyStore')
+	}
+	
+	description = 'Sign the Main JAR'
+	inputFile = jar.archivePath
+	outputFile = jar.archivePath
+	
+	keyStore = project.findProperty('keyStore')
+	alias = project.findProperty('keyStoreAlias')
+	storePass = project.findProperty('keyStorePass')
+	keyPass = project.findProperty('keyStoreKeyPass')
+}
+
+task signApiJar(type: SignJar) {
+	onlyIf {
+		getBooleanProperty('do_sign_jar') &&
+				(project.ext.dev == false) &&
+				project.hasProperty('keyStore')
+	}
+	
+	description = 'Sign the API JAR'
+	keyStore = project.findProperty('keyStore')
+	alias = project.findProperty('keyStoreAlias')
+	storePass = project.findProperty('keyStorePass')
+	keyPass = project.findProperty('keyStoreKeyPass')
+	
+	inputFile = apiJar.archivePath
+	outputFile = apiJar.archivePath
+}
+
+task signDeobfJar(type: SignJar) {
+	onlyIf {
+		getBooleanProperty('do_sign_jar') &&
+				(project.ext.dev == false) &&
+				project.hasProperty('keyStore')
+	}
+	
+	description = 'Sign the deobf JAR'
+	keyStore = project.findProperty('keyStore')
+	alias = project.findProperty('keyStoreAlias')
+	storePass = project.findProperty('keyStorePass')
+	keyPass = project.findProperty('keyStoreKeyPass')
+	
+	inputFile = deobfJar.archivePath
+	outputFile = deobfJar.archivePath
+}
+
+if (getBooleanProperty('do_sign_jar')) {
+	build.dependsOn signJar
+	if (project.ext.dev == false) {
+		if (getBooleanProperty('create_api_jar')) {
+			build.dependsOn signApiJar
+		}
+		if (getBooleanProperty('create_deobf_jar')) {
+			build.dependsOn signDeobfJar
+		}
+	}
+}
+
+artifacts {
+	if (project.ext.dev == false) {
+		if (getBooleanProperty('create_api_jar')) {
+			archives apiJar
+		}
+		if (getBooleanProperty('create_deobf_jar')) {
+			archives deobfJar
+		}
+	}
+}
+
+boolean getBooleanProperty(final String property) {
+	if (project.hasProperty(property)) {
+		return ((String) project.findProperty(property)).toBoolean()
+	} else {
+		return false
+	}
+}
