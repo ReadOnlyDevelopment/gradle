@@ -24,10 +24,16 @@ apply from: "https://raw.githubusercontent.com/ReadOnlyDevelopment/gradle/galact
 If your going to just put the latest build number simply use the `dev-latest` script. That script will always define the latest version
 
 
-## Latest Version
+## Latest Version (Disabled Due To Error)
+### Do Not Try to Compile against this script
+
 In your `build.gradle` script. Add the following block and define the version you want
+
+<details>
+  <summary>Hidden Until Fixed</summary>
 ```gradle
 apply from: "https://raw.githubusercontent.com/ReadOnlyDevelopment/gradle/galacticraft/dev-latest.gradle"
 ```
+</details>
 
 Special Thanks to [Marcus8448](https://github.com/marcus8448) for creating the ivy repository part of the script
