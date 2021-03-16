@@ -3,10 +3,8 @@ repositories {
 }
 
 dependencies {
-	//compile "micdoodle8.mods:GalacticraftCore-Dev:4.0.2.280"
-	//compile "micdoodle8.mods:Galacticraft-API:4.0.2.280"
-	//compile "micdoodle8.mods:GalacticraftPlanets-Dev:4.0.2.280"
-	//compile "micdoodle8.mods:MicdoodleCore-Dev:4.0.2.280"
+	compile "micdoodle8.mods:GalacticraftCore-Dev:4.0.2.280"
+	compile "micdoodle8.mods:Galacticraft-API:4.0.2.280"
+	compile "micdoodle8.mods:GalacticraftPlanets-Dev:4.0.2.280"
+	compile "micdoodle8.mods:MicdoodleCore-Dev:4.0.2.280"
 }
-
-apply from: "dev.gradle"
