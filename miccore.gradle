@@ -1,0 +1,8 @@
+task copyMiccore(type: Copy) {
+	from '/submodule/MicdoodleCore/src/main'
+	into 'src/main'
+}
+
+task subModule(type:Exec) {
+	commandLine 'git', 'submodule', 'add', '-b', '1.12', 'https://github.com/micdoodle8/MicdoodleCore', 'submodule/MicdoodleCore'
+}
