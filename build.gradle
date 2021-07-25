@@ -1,5 +1,25 @@
-import org.apache.tools.ant.filters.ReplaceTokens
-import org.gradle.util.GradleVersion
+buildscript {
+    repositories {
+    	jcenter()
+        mavenCentral()
+        maven { url = "https://files.minecraftforge.net/maven" }
+	
+        dependencies {
+	    classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        }
+    }
+}
+
+plugins {
+    id "se.bjurr.gitchangelog.git-changelog-gradle-plugin" version "1.71.4"
+    id 'org.cadixdev.licenser' version '0.6.1'
+    id 'org.ajoberstar.grgit' version '3.1.1'
+    id 'java'
+    id 'eclipse'
+    id 'maven-publish'
+}
+
+apply plugin: 'net.minecraftforge.gradle.forge'
 
 def javaVersion = project.findProperty("javaVersion") ?: JavaVersion.VERSION_1_8
 def majorJavaVersion = javaVersion.getMajorVersion()
@@ -21,29 +41,6 @@ def lombok_version = "1.18.20"
 String build = gcBuild.toString()
 String fullVersion = gcVersion.toString() + "." + gcBuild.toString()
 
-buildscript {
-    repositories {
-        mavenCentral()
-        gradlePluginPortal()
-        maven { url = "https://files.minecraftforge.net/maven" }
-	
-        dependencies {
-            classpath "gradle.plugin.org.cadixdev.gradle:licenser:0.5.1"
-	    classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
-        }
-    }
-}
-
-plugins {
-    id "se.bjurr.gitchangelog.git-changelog-gradle-plugin" version "1.71.4"
-    id 'org.cadixdev.licenser' version '0.6.1'
-    id 'org.ajoberstar.grgit' version '3.1.1'
-    id 'java'
-    id 'eclipse'
-    id 'maven-publish'
-}
-
-apply plugin: 'net.minecraftforge.gradle.forge'
 
 sourceCompatibility = targetCompatibility = javaVersion
 compileJava {
