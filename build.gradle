@@ -15,22 +15,33 @@ String build = gcBuild.toString()
 String fullVersion = gcVersion.toString() + "." + gcBuild.toString()
 
 buildscript {
-	repositories {
-		mavenCentral()
-		gradlePluginPortal()
-    
-		dependencies {
-			classpath "gradle.plugin.org.cadixdev.gradle:licenser:0.5.1"
-		}
-	}
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+        maven { url = "https://files.minecraftforge.net/maven" }
+	
+        dependencies {
+            classpath "gradle.plugin.org.cadixdev.gradle:licenser:0.5.1"
+	    classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        }
+    }
 }
 
-apply plugin: "maven-publish"
-apply plugin: "java"
-apply plugin: org.cadixdev.gradle.licenser.Licenser
+plugins {
+    id "se.bjurr.gitchangelog.git-changelog-gradle-plugin" version "1.71.4"
+    id 'org.cadixdev.licenser' version '0.6.1'
+    id 'org.ajoberstar.grgit' version '3.1.1'
+    id 'java'
+    id 'eclipse'
+    id 'maven-publish'
+}
 
-sourceCompatibility = javaVersion
-targetCompatibility = javaVersion
+apply plugin: 'net.minecraftforge.gradle.forge'
+
+sourceCompatibility = targetCompatibility = javaVersion
+compileJava {
+	sourceCompatibility = targetCompatibility = javaVersion
+}
 
 repositories {
     jcenter()
