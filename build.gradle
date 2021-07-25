@@ -1,0 +1,55 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+import org.gradle.util.GradleVersion
+
+def javaVersion = project.findProperty("javaVersion") ?: JavaVersion.VERSION_1_8
+def majorJavaVersion = javaVersion.getMajorVersion()
+def majorJavaVersionInt = majorJavaVersion.toInteger()
+
+def gcVersion = project.findProperty("gcVersion") ? project.gcVersion : 4.0.2.261
+def includeGCCore = !project.hasProperty("includeGCCore") || project.includeGCCore
+def includeGCPlanets = !project.hasProperty("includeGCPlanets") || project.includeGCPlanets
+def miccoreAsRuntime = !project.hasProperty("miccoreAsRuntime") || project.miccoreAsRuntime
+
+buildscript {
+	repositories {
+		mavenCentral()
+		gradlePluginPortal()
+    
+		dependencies {
+			classpath "gradle.plugin.org.cadixdev.gradle:licenser:0.5.1"
+		}
+	}
+}
+
+apply plugin: "maven-publish"
+apply plugin: "java"
+apply plugin: org.cadixdev.gradle.licenser.Licenser
+
+sourceCompatibility = javaVersion
+targetCompatibility = javaVersion
+
+repositories {
+	jcenter()
+	mavenCentral()
+}
+
+license {
+	include "**/*.java"
+}
+
+tasks.withType(JavaCompile) {
+	options.encoding = "UTF-8"
+	options.compilerArgs << "-Xlint:all"
+}
+
+javadoc.options {
+	source = majorJavaVersion
+	encoding = "UTF-8"
+	docTitle = windowTitle = "${project.name} ${project.version}"
+
+	if (majorJavaVersionInt > 10) {
+		links = ["https://docs.oracle.com/en/java/javase/${majorJavaVersion}/docs/api".toString()]
+	} else {
+		links = ["https://docs.oracle.com/javase/${majorJavaVersion}/docs/api/".toString()]
+	}
+}
