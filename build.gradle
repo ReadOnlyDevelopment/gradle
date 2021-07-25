@@ -1,12 +1,11 @@
 buildscript {
     repositories {
-    	jcenter()
+        jcenter()
         mavenCentral()
-	maven { url "https://plugins.gradle.org/m2/" }
+        maven { url "https://plugins.gradle.org/m2/" }
         maven { url = "https://files.minecraftforge.net/maven" }
 	
         dependencies {
-	    classpath "org.ajoberstar.grgit:grgit-gradle:4.1.0"
 	    classpath "gradle.plugin.org.cadixdev.gradle:licenser:0.6.1"
 	    classpath "gradle.plugin.se.bjurr.gitchangelog:git-changelog-gradle-plugin:1.71.4"
 	    classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
@@ -17,7 +16,6 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
-apply plugin: 'org.ajoberstar.grgit'
 apply plugin: 'org.cadixdev.licenser'
 apply plugin: 'se.bjurr.gitchangelog.git-changelog-gradle-plugin'
 apply plugin: 'net.minecraftforge.gradle.forge'
