@@ -5,11 +5,18 @@ def javaVersion = project.findProperty("javaVersion") ?: JavaVersion.VERSION_1_8
 def majorJavaVersion = javaVersion.getMajorVersion()
 def majorJavaVersionInt = majorJavaVersion.toInteger()
 
-def gcVersion = project.findProperty("gcVersion") ? project.gcVersion : 4.0.2
-def gcBuild = project.findProperty("gcBuild") ? project.gcBuild : 261
+def gcVersion = project.findProperty("gcVersion") ? project.gcVersion : "4.0.2"
+def gcBuild = project.findProperty("gcBuild") ? project.gcBuild : "261"
 def includeGCCore = !project.hasProperty("includeGCCore") || project.includeGCCore
 def includeGCPlanets = !project.hasProperty("includeGCPlanets") || project.includeGCPlanets
 def miccoreAsRuntime = !project.hasProperty("miccoreAsRuntime") || project.miccoreAsRuntime
+
+def project.findProperty("forge")
+def project.findProperty("minecraft")
+def project.findProperty("mapping")
+def project.findProperty("infoClass")
+
+def lombok_version = "1.18.20"
 
 String build = gcBuild.toString()
 String fullVersion = gcVersion.toString() + "." + gcBuild.toString()
@@ -55,6 +62,12 @@ repositories {
             artifact()
         }
     }
+    removeIf { 
+        it.url.host == 'files.minecraftforge.net' 
+    }
+    maven { 
+    	url "https://maven.minecraftforge.net/" 
+    }
 }
 
 dependencies {
@@ -71,6 +84,38 @@ dependencies {
     } else {
     	compile "GC-1.12-dev:MicdoodleCore-Dev:${gcversion}"
     }
+    
+    compileOnly "org.projectlombok:lombok:${lombok_version}"
+    annotationProcessor "org.projectlombok:lombok:${lombok_version}"
+
+    testCompileOnly "org.projectlombok:lombok:${lombok_version}"
+    testAnnotationProcessor "org.projectlombok:lombok:${lombok_version}"
+}
+
+minecraft {
+    version = "${minecraft}-${forge}"
+    mappings = "${mapping}"
+    runDir = "run"
+    replace '${version}', project.version
+    replace '${fingerprint}', project.findProperty('signSHA1')
+    replaceIn "${infoClass}.java"
+}
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'mcmod.info'
+
+        expand 'version':project.version, 'mcversion':project.minecraft.version
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+	
+    rename '(.+_at.cfg)', 'META-INF/$1'
 }
 
 license {
