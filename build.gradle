@@ -5,10 +5,14 @@ def javaVersion = project.findProperty("javaVersion") ?: JavaVersion.VERSION_1_8
 def majorJavaVersion = javaVersion.getMajorVersion()
 def majorJavaVersionInt = majorJavaVersion.toInteger()
 
-def gcVersion = project.findProperty("gcVersion") ? project.gcVersion : 4.0.2.261
+def gcVersion = project.findProperty("gcVersion") ? project.gcVersion : 4.0.2
+def gcBuild = project.findProperty("gcBuild") ? project.gcBuild : 261
 def includeGCCore = !project.hasProperty("includeGCCore") || project.includeGCCore
 def includeGCPlanets = !project.hasProperty("includeGCPlanets") || project.includeGCPlanets
 def miccoreAsRuntime = !project.hasProperty("miccoreAsRuntime") || project.miccoreAsRuntime
+
+String build = gcBuild.toString()
+String fullVersion = gcVersion.toString() + "." + gcBuild.toString()
 
 buildscript {
 	repositories {
@@ -29,27 +33,52 @@ sourceCompatibility = javaVersion
 targetCompatibility = javaVersion
 
 repositories {
-	jcenter()
-	mavenCentral()
+    jcenter()
+    mavenCentral()
+    ivy {
+        url "https://micdoodle8.com/new-builds/"
+        layout 'pattern', {
+            artifact "[organization]/${build}/[module]-[revision].jar"
+        }
+        metadataSources {
+            artifact()
+        }
+    }
+}
+
+dependencies {
+    if(!includeGCCore) {
+    	compile "GC-1.12-dev:Galacticraft-API:${gcversion}"
+    } else {
+    	compile "GC-1.12-dev:GalacticraftCore-Dev:${gcversion}"
+    }
+    if(includeGCPlanets) {
+        compile "GC-1.12-dev:Galacticraft-Planets-Dev:${gcversion}"
+    }
+    if(miccoreAsRuntime) {
+        runtime "GC-1.12-dev:MicdoodleCore-Dev:${gcversion}"
+    } else {
+    	compile "GC-1.12-dev:MicdoodleCore-Dev:${gcversion}"
+    }
 }
 
 license {
-	include "**/*.java"
+    include "**/*.java"
 }
 
 tasks.withType(JavaCompile) {
-	options.encoding = "UTF-8"
-	options.compilerArgs << "-Xlint:all"
+    options.encoding = "UTF-8"
+    options.compilerArgs << "-Xlint:all"
 }
 
 javadoc.options {
-	source = majorJavaVersion
-	encoding = "UTF-8"
-	docTitle = windowTitle = "${project.name} ${project.version}"
+    source = majorJavaVersion
+    encoding = "UTF-8"
+    docTitle = windowTitle = "${project.name} ${project.version}"
 
-	if (majorJavaVersionInt > 10) {
-		links = ["https://docs.oracle.com/en/java/javase/${majorJavaVersion}/docs/api".toString()]
-	} else {
-		links = ["https://docs.oracle.com/javase/${majorJavaVersion}/docs/api/".toString()]
-	}
+    if (majorJavaVersionInt > 10) {
+        links = ["https://docs.oracle.com/en/java/javase/${majorJavaVersion}/docs/api".toString()]
+    } else {
+        links = ["https://docs.oracle.com/javase/${majorJavaVersion}/docs/api/".toString()]
+    }
 }
