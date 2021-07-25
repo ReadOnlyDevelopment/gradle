@@ -11,10 +11,10 @@ def includeGCCore = !project.hasProperty("includeGCCore") || project.includeGCCo
 def includeGCPlanets = !project.hasProperty("includeGCPlanets") || project.includeGCPlanets
 def miccoreAsRuntime = !project.hasProperty("miccoreAsRuntime") || project.miccoreAsRuntime
 
-def project.findProperty("forge")
-def project.findProperty("minecraft")
-def project.findProperty("mapping")
-def project.findProperty("infoClass")
+def forge = project.findProperty("forge")
+def minecraft = project.findProperty("minecraft")
+def mapping = project.findProperty("mapping")
+def infoClass = project.findProperty("infoClass")
 
 def lombok_version = "1.18.20"
 
