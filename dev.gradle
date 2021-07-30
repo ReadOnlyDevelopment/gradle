@@ -5,22 +5,7 @@ def gcVersionBuild = project.project.hasProperty("gcBuild") ? project.gcBuild : 
 def apiOnly = !project.hasProperty("apiOnly") || project.apiOnly
 System.out.println("Property apiOnly = " + apiOnly)
 
-if(!usingUnsupportedVersion) {
-	System.out.println("############################################################################")
-	System.out.println("#")
-	System.out.println("# Gradle Version 4.5 or higher is required for this gradle module script")
-	System.out.println("# Please update the `distributionUrl` property in gradle-wrapper.properties")
-	System.out.println("#")
-	System.out.println("############################################################################")
-	
-	repositories {
-	
-	}
-	
-	dependencies {
-	
-	}
-} else {
+if(usingUnsupportedVersion) {
 
 	repositories {
 		ivy {
@@ -36,4 +21,12 @@ if(!usingUnsupportedVersion) {
 		compile "GC-1.12-dev:Galacticraft-Planets-Dev:1.12.2-4.0.2.${gcVersionBuild}"
 		compile "GC-1.12-dev:MicdoodleCore-Dev:1.12.2-4.0.2.${gcVersionBuild}"
 	}
-}
+
+} 
+
+	System.out.println("############################################################################")
+	System.out.println("#")
+	System.out.println("# Gradle Version 4.5 or higher is required for this gradle module script")
+	System.out.println("# Please update the `distributionUrl` property in gradle-wrapper.properties")
+	System.out.println("#")
+	System.out.println("############################################################################")
