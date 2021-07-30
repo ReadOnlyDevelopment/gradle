@@ -1,20 +1,21 @@
-String gcversion = "1.12.2-4.0.2.${project.gcbuild}"
+import org.gradle.util.GradleVersion
+
+def usingUnsupportedVersion = GradleVersion.current() >= GradleVersion.version("4.5")
+def gcVersionBuild = project.project.hasProperty("gcBuild") ? project.gcBuild : 261
+def apiOnly = !project.hasProperty("apiOnly") || project.apiOnly
+System.out.println("Property apiOnly = " + apiOnly)
 
 repositories {
 	ivy {
 		url "https://micdoodle8.com/new-builds/"
-		layout 'pattern', {
-			artifact "[organization]/${project.gcbuild}/[module]-[revision].jar"
-		}
-		metadataSources {
-			artifact()
-		}
+		layout 'pattern', { artifact "[organization]/${gcVersionBuild}/[module]-[revision].jar" }
+		metadataSources { artifact() }
 	}
 }
 
 dependencies {
-	compile "GC-1.12-dev:GalacticraftCore-Dev:${gcversion}"
-	compile "GC-1.12-dev:Galacticraft-API:${gcversion}"
-	compile "GC-1.12-dev:Galacticraft-Planets-Dev:${gcversion}"
-	compile "GC-1.12-dev:MicdoodleCore-Dev:${gcversion}"
+	compile "GC-1.12-dev:GalacticraftCore-Dev:1.12.2-4.0.2.${gcVersionBuild}"
+	compile "GC-1.12-dev:Galacticraft-API:1.12.2-4.0.2.${gcVersionBuild}"
+	compile "GC-1.12-dev:Galacticraft-Planets-Dev:1.12.2-4.0.2.${gcVersionBuild}"
+	compile "GC-1.12-dev:MicdoodleCore-Dev:1.12.2-4.0.2.${gcVersionBuild}"
 }
