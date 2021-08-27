@@ -17,5 +17,5 @@ dependencies {
 	compile "GC-1.12-dev:GalacticraftCore-Dev:${gcversion}"
 	compile "GC-1.12-dev:Galacticraft-API:${gcversion}"
 	compile "GC-1.12-dev:Galacticraft-Planets-Dev:${gcversion}"
-	runtime "GC-1.12-dev:MicdoodleCore-Dev:${gcversion}"
+	compile "GC-1.12-dev:MicdoodleCore-Dev:${gcversion}"
 }
