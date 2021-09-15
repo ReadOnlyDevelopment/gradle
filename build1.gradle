@@ -30,11 +30,11 @@ buildscript {
 		gradlePluginPortal()
 
 		dependencies {
-			classpath "gradle.plugin.org.cadixdev.gradle:licenser:0.5.1"
 
 			//I'm not sure why I can't just use gradle4.
 			if (GradleVersion.current() >= GradleVersion.version("5.0")) {
-
+				classpath "com.diffplug.spotless:spotless-plugin-gradle:5.12.1"
+				
 				if (!project.hasProperty("useSpotBugs") || project.useSpotBugs) {
 					classpath "gradle.plugin.com.github.spotbugs.snom:spotbugs-gradle-plugin:4.7.0"
 				}
