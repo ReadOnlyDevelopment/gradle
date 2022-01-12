@@ -1,19 +1,11 @@
-String gcversion = "1.12.2-4.0.2.${project.gcbuild}"
-
 repositories {
-	ivy {
-		url "https://micdoodle8.com/new-builds/"
-		layout 'pattern', {
-			artifact "[organization]/${project.gcbuild}/[module]-[revision].jar"
-		}
-		metadataSources {
-			artifact()
-		}
-	}
+    maven {
+        url "https://maven.galacticraft.dev"
+    }
 }
 
 dependencies {
-	compile "GC-1.12-dev:GalacticraftCore-Dev:${gcversion}"
-	compile "GC-1.12-dev:Galacticraft-Planets-Dev:${gcversion}"
-	runtime "GC-1.12-dev:MicdoodleCore-Dev:${gcversion}"
+    compile "micdoodle8.mods.galacticraft:core:1.12.2-4.0.2.280"
+    compile "micdoodle8.mods.galacticraft:planets:1.12.2-4.0.2.280"
+    runtime "micdoodle8.mods.micdoodlecore:micdoodlecore:1.12.2-4.0.2.280"
 }
